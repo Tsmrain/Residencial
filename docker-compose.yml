@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: residencial-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Residencial_Password123!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+  db-init:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: residencial-db-init
+    depends_on:
+      - db
+    # Este comando espera 15 segundos a que el motor arranque y luego crea la BD si no existe.
+    command: >
+      bash -c "sleep 15s && 
+      /opt/mssql-tools/bin/sqlcmd -S db -U sa -P 'Residencial_Password123!' -Q 'IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = ''residencial_db'') BEGIN CREATE DATABASE residencial_db; END'"
+
+volumes:
+  sqlserver_data:
