@@ -1,37 +1,62 @@
 services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: residencial-db
+    container_name: residencial_db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Password123!"
     ports:
       - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Residencial_Password123!
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Password123! -Q 'IF DB_ID(\"residencial_db\") IS NULL THROW 50000, \"Database not found\", 1' -C"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    # Auto-create the database on startup
+    entrypoint:
+      - bash
+      - -c
+      - |
+        /opt/mssql/bin/sqlservr &
+        # Wait for SQL Server to be ready
+        echo 'Waiting for SQL Server to accept connections...'
+        until /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Password123! -Q 'SELECT 1' -C &> /dev/null; do
+          sleep 2
+        done
+        echo 'SQL Server is up, creating database...'
+        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Password123! -Q 'IF DB_ID("residencial_db") IS NULL CREATE DATABASE [residencial_db]' -C
+        echo 'Database created/checked. Ready.'
+        wait
 
-  db-init:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: residencial-db-init
+
+  backend:
+    build: ./backend
+    container_name: residencial_backend
+    restart: on-failure # Reintenta si falla por falta de DB al inicio
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 1433
+      DB_NAME: residencial_db
+      DB_USER: sa
+      DB_PASSWORD: "Password123!"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: residencial_frontend
+    ports:
+      - "5173:5173"
     volumes:
-      - ./init.sql:/init.sql
-    command: >
-      bash -c "
-      echo 'Esperando a que SQL Server inicie...';
-      sleep 20;
-      for i in {1..20}; do
-        /opt/mssql-tools18/bin/sqlcmd -S db -U sa -P Residencial_Password123! -C -i /init.sql;
-        if [ \$? -eq 0 ]; then
-          echo 'Base de datos residencial_db creada exitosamente.';
-          break;
-        else
-          echo 'El servidor aún no está listo, reintentando en 5 segundos...';
-          sleep 5;
-        fi;
-      done"
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:8080
+    depends_on:
+      - backend
 
 volumes:
-  sqlserver_data:
+  mssql_data:
