@@ -1,57 +1,25 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-
-interface Propiedad {
-  id: number;
-  numero: string;
-  bloque: string;
-  propietario: string;
-}
+import { useState } from 'react';
+import './App.css';
+import { Navbar } from './components/Navbar';
+import { Disponibilidad } from './components/Disponibilidad';
+import { Reservas } from './components/Reservas';
+import { Recepcion } from './components/Recepcion';
+import { Reportes } from './components/Reportes';
 
 function App() {
-  const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:8080/api/propiedades')
-      .then(res => res.json())
-      .then(data => {
-        setPropiedades(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching data:", err);
-        setLoading(false);
-      });
-  }, []);
+  const [activeTab, setActiveTab] = useState('disponibilidad');
 
   return (
-    <div className="container">
-      <header>
-        <h1>Residencial - Gestión de Propiedades</h1>
-      </header>
-      
-      <main>
-        {loading ? (
-          <p>Cargando propiedades...</p>
-        ) : (
-          <div className="grid">
-            {propiedades.length === 0 ? (
-              <p>No hay propiedades registradas.</p>
-            ) : (
-              propiedades.map(p => (
-                <div key={p.id} className="card">
-                  <h3>Propiedad {p.numero}</h3>
-                  <p><strong>Bloque:</strong> {p.bloque}</p>
-                  <p><strong>Propietario:</strong> {p.propietario}</p>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </main>
-    </div>
-  )
+    <>
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="container">
+        {activeTab === 'disponibilidad' && <Disponibilidad />}
+        {activeTab === 'reservas' && <Reservas />}
+        {activeTab === 'recepcion' && <Recepcion />}
+        {activeTab === 'reportes' && <Reportes />}
+      </div>
+    </>
+  );
 }
 
-export default App
+export default App;
