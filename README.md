@@ -39,16 +39,18 @@ docker compose up --build
 3. VS Code detectará las carpetas `backend` y `frontend`.
 4. Para debugear el backend fuera de Docker (opcional), asegúrate de apuntar a `localhost` en `application.properties` (Docker usa el nombre del servicio `db`).
 
-### 🔄 Flujo de Trabajo y Git
+### 🔄 Ciclo de Desarrollo (Guía para tu compañero)
 
-Para mantener el proyecto sincronizado trabajando entre varias personas (o con Antigravity IA):
+Si tu compañero usa IntelliJ o WebStorm, este es el flujo que debe seguir:
 
-1. **Antes de empezar:** Haz un `git pull` para recibir los últimos cambios.
-2. **Durante el desarrollo:** Si usas IntelliJ o WebStorm, usa la pestaña **Git** (abajo a la izquierda) para ver qué archivos has modificado.
-3. **Guardar cambios:** 
-   - En IntelliJ: `Ctrl + K` (Commit) y `Ctrl + Shift + K` (Push).
-   - En VS Code: Pestaña "Source Control" → Commit → Sync Changes.
-   - En Antigravity: Pide "sube los cambios a git".
+1. **Editar Código:** No necesita guardar manualmente (JetBrains lo hace solo), pero si añade dependencias en `pom.xml`, debe hacer clic en el icono de **"Load Maven Changes"** que aparece arriba a la derecha.
+2. **Actualizar Docker:** Si modifica el código del backend o frontend, debe refrescar los contenedores desde la terminal (o la pestaña Services de IntelliJ):
+   ```bash
+   docker compose up --build [servicio] # Ejemplo: backend o frontend
+   ```
+3. **Guardar en Git:** 
+   - **Commit:** `Ctrl + K`. Seleccionar todos los archivos (código, Docker y Git meta).
+   - **Push:** `Ctrl + Shift + K`. Esto sube los cambios a GitHub para que tú los veas.
 
 ---
 
