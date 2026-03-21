@@ -43,22 +43,32 @@ export function Navbar({ activeTab, setActiveTab, rolActual, setRolActual }: Nav
       </div>
 
       <div className="role-switcher">
-        <select 
-          className="form-control" 
-          style={{ width: 'auto', padding: '0.2rem 0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white', fontWeight: 500 }}
-          value={rolActual}
-          onChange={(e) => {
-            const newRol = e.target.value as Rol;
-            setRolActual(newRol);
-            // Redirigir si pierde acceso
-            if (newRol === 'CLIENTE' && (activeTab === 'recepcion' || activeTab === 'reportes')) setActiveTab('disponibilidad');
-            if (newRol === 'RECEPCIONISTA' && activeTab === 'reportes') setActiveTab('recepcion');
-          }}
-        >
-          <option value="CLIENTE" style={{ color: 'black' }}>👨‍💼 Cliente</option>
-          <option value="RECEPCIONISTA" style={{ color: 'black' }}>👩‍💻 Recepcionista</option>
-          <option value="ADMINISTRADOR" style={{ color: 'black' }}>👑 Administrador</option>
-        </select>
+        {rolActual === 'CLIENTE' ? (
+          <button 
+            className="btn-search" 
+            style={{ padding: '0.4rem 1rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white' }}
+            onClick={() => {
+              // Si el componente padre pasa algo para abrir login:
+              // Para no complicar App.tsx, lo abrimos desde acá si se envía una función
+              if (typeof (window as any).setShowLogin === 'function') {
+                (window as any).setShowLogin(true);
+              }
+            }}
+          >
+            Log In (Staff)
+          </button>
+        ) : (
+          <button 
+            className="btn-search" 
+            style={{ padding: '0.4rem 1rem', background: '#ff3b30', border: 'none', color: 'white' }}
+            onClick={() => {
+              setRolActual('CLIENTE');
+              setActiveTab('disponibilidad');
+            }}
+          >
+            Log Out ({rolActual})
+          </button>
+        )}
       </div>
     </nav>
   );

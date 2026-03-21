@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { Navbar } from './components/Navbar';
 import { Disponibilidad } from './components/Disponibilidad';
 import { Reservas } from './components/Reservas';
 import { Recepcion } from './components/Recepcion';
 import { Reportes } from './components/Reportes';
+import { Login } from './components/Login';
 
 type Rol = 'CLIENTE' | 'RECEPCIONISTA' | 'ADMINISTRADOR';
 
 function App() {
   const [activeTab, setActiveTab] = useState('disponibilidad');
   const [rolActual, setRolActual] = useState<Rol>('CLIENTE');
+  const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+    (window as any).setShowLogin = setShowLogin;
+  }, []);
 
   return (
     <>
@@ -36,6 +42,13 @@ function App() {
           <Reportes />
         )}
       </div>
+
+      {showLogin && (
+        <Login 
+          setRolActual={setRolActual} 
+          closeLogin={() => setShowLogin(false)} 
+        />
+      )}
     </>
   );
 }

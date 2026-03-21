@@ -178,11 +178,14 @@ export function Disponibilidad() {
               <div className="results-grid">
                 {habitaciones.map(h => (
                   <div key={h.id} className="room-card">
-                    <span className="room-badge">{h.tipo.replace('_', ' ')}</span>
-                    <h3>Habitación {h.numero}</h3>
-                    <p className="price-tag">${h.precioPorBloque.toFixed(2)} <span>/ bloque</span></p>
-                    <div className="schedule">🟢 {h.horarioDisponible}</div>
-                    <button className="btn-search" style={{ width: '100%', marginTop: '1rem' }} onClick={() => setSelectedRoom(h)}>Reservar</button>
+                    <img src={`/images/rooms/${h.tipo.toLowerCase()}.png`} alt={h.tipo} className="room-image" />
+                    <div className="room-content">
+                      <span className="room-badge">{h.tipo.replace('_', ' ')}</span>
+                      <h3>Habitación {h.numero}</h3>
+                      <p className="price-tag">${h.precioPorBloque.toFixed(2)} <span>/ bloque</span></p>
+                      <div className="schedule" style={{ marginBottom: '1rem' }}>🟢 {h.horarioDisponible}</div>
+                      <button className="btn-search" style={{ width: '100%', marginTop: 'auto' }} onClick={() => setSelectedRoom(h)}>Reservar</button>
+                    </div>
                   </div>
                 ))}
               </div>
