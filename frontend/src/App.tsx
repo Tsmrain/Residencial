@@ -65,13 +65,23 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <header>
-        <h1>🏢 Residencial Skyview</h1>
-        <p className="subtitle">Consulta de Disponibilidad en Tiempo Real</p>
-      </header>
+    <>
+      <nav className="navbar">
+        <div className="logo">SKYVIEW</div>
+        <div className="nav-links">
+          <a href="#buscar">Disponibilidad</a>
+          <a href="#reservas">Mis Reservas</a>
+          <a href="#soporte">Soporte</a>
+        </div>
+      </nav>
 
-      <main>
+      <div className="container">
+        <header>
+          <h1>Expertly Designed Living</h1>
+          <p className="subtitle">Discover tranquility and luxury at Skyview Residences.</p>
+        </header>
+
+        <main id="buscar">
         {/* Formulario de Búsqueda */}
         <section className="search-box">
           <div className="form-group">
@@ -154,7 +164,8 @@ function App() {
           )}
         </div>
       </main>
-    </div>
+      </div>
+    </>
   )
 }
 
