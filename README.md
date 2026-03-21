@@ -39,11 +39,16 @@ docker compose up --build
 3. VS Code detectará las carpetas `backend` y `frontend`.
 4. Para debugear el backend fuera de Docker (opcional), asegúrate de apuntar a `localhost` en `application.properties` (Docker usa el nombre del servicio `db`).
 
-### 🤖 Antigravity / IA Agent
-Si estás trabajando con un agente de IA como Antigravity:
-- El agente tiene acceso a las herramientas de terminal y edición de archivos.
-- Puedes pedirle que cree nuevas entidades, controladores o componentes de React.
-- **Tip:** Pide al agente que use `docker compose logs -f` para monitorear errores en tiempo real si algo falla.
+### 🔄 Flujo de Trabajo y Git
+
+Para mantener el proyecto sincronizado trabajando entre varias personas (o con Antigravity IA):
+
+1. **Antes de empezar:** Haz un `git pull` para recibir los últimos cambios.
+2. **Durante el desarrollo:** Si usas IntelliJ o WebStorm, usa la pestaña **Git** (abajo a la izquierda) para ver qué archivos has modificado.
+3. **Guardar cambios:** 
+   - En IntelliJ: `Ctrl + K` (Commit) y `Ctrl + Shift + K` (Push).
+   - En VS Code: Pestaña "Source Control" → Commit → Sync Changes.
+   - En Antigravity: Pide "sube los cambios a git".
 
 ---
 
