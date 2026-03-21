@@ -1,6 +1,19 @@
 classDiagram
     direction TB
 
+    class Usuario {
+        username
+        password
+        rol
+    }
+
+    class Rol {
+        <<enumeration>>
+        CLIENTE
+        RECEPCIONISTA
+        ADMINISTRADOR
+    }
+
     class Cliente {
         nombre
         documento
@@ -21,9 +34,10 @@ classDiagram
     }
 
     class TipoHabitacion {
-        nombre
-        descripcion
-        precioBase
+        <<enumeration>>
+        ESTANDAR
+        VIP
+        SUPER_VIP
     }
 
     class Pago {
@@ -32,6 +46,7 @@ classDiagram
         metodoPago
     }
 
+    Usuario "1" -- "1" Rol : Tiene >
     Cliente "1" -- "*" Reserva : Realiza >
     Reserva "*" -- "1" Habitacion : Se-asigna-a >
     Habitacion "*" -- "1" TipoHabitacion : Descrita-por >
